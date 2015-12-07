@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 public class MessageClient {
 	
-	public static String envoi = "";
 	public static Scanner sc = new Scanner(System.in);
 
 	static public class ThreadWrite extends Thread{
@@ -13,8 +12,17 @@ public class MessageClient {
 		{
 			while (true)
 			{
-				envoi = sc.nextLine().trim();
+				renvoi = sc.nextLine().trim();
 			}
+		}
+		
+		private String renvoi = "";
+		
+		public String getRenvoi()
+		{
+			String tps = renvoi;
+			renvoi = "";
+			return tps;
 		}
 	}
 	
@@ -50,6 +58,7 @@ public class MessageClient {
 			
 			/***********************************************/
 			
+			String envoi = "";
 			String recu = "";
 			ThreadWrite tw = new ThreadWrite();
 			tw.start();
@@ -63,10 +72,11 @@ public class MessageClient {
 					recu = recuTps;
 				}
 				
+				envoi = tw.getRenvoi();
+				
 				if(!envoi.equals(""))
 				{
 					texte.send(name + "\t" + envoi);
-					envoi = "";
 				}
 				
 			}

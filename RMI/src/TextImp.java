@@ -5,7 +5,7 @@ import java.io.*;
 public class TextImp implements Text {
 	
 	
-	private String lastText;
+	private String lastText = "";
 	private String[] historique;
 	private static int SIZE = 10;
 	
@@ -18,7 +18,7 @@ public class TextImp implements Text {
 											new File("historique.log")));
 			
 			historique = (String[]) ois.readObject();
-			
+			lastText = "";
 			ois.close();
 		
 		} catch (Exception e) {
