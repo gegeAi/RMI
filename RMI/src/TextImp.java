@@ -54,7 +54,7 @@ public class TextImp implements Text {
 	
 	private void editHistorique() 
 	{
-		for(int i=0; i<historique.length-2; i++)
+		for(int i=0; i<historique.length-1; i++)
 		{
 			historique[i] = historique[i+1];
 		}
