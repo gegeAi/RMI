@@ -1,8 +1,16 @@
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
+import java.awt.*;
+import javax.swing.*;
 
 public class MessageClient {
+	
+	static private JFrame fenetre;
+	static private JTextArea conversation;
+	static private JTextField chatZone;
+	static private JButton sendButton;
+	static private JScrollPane scroll;
 	
 	public static Scanner sc = new Scanner(System.in);
 
@@ -26,6 +34,13 @@ public class MessageClient {
 		}
 	}
 	
+	static public class InterfaceGraph extends Frame{
+		
+		public InterfaceGraph() { 
+			
+		}
+		
+	}
 	public static void main(String [] args) 
 	{
 		if (args.length < 1) 
@@ -33,10 +48,27 @@ public class MessageClient {
 			System.out.println("Usage: java MessageClient <server host>"); 
 			return; 
 		}
+		new InterfaceGraph();
 		try 
 		{
 			//if (System.getSecurityManager() == null) { System.setSecurityManager(new SecurityManager()); }
 			
+			fenetre = new JFrame("chat client");
+			fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			fenetre.setLayout(new FlowLayout());
+			fenetre.setSize(300,320); 
+			
+			conversation = new JTextArea(15,15);
+			conversation.setEditable(false);
+			conversation.setLineWrap(false);
+			chatZone = new JTextField(15);
+			scroll = new JScrollPane(conversation);
+			sendButton = new JButton("Send");
+			
+			fenetre.getContentPane().add(scroll);
+			fenetre.getContentPane().add(chatZone);
+			fenetre.getContentPane().add(sendButton);
+			fenetre.setVisible(true);
 			
 			String host = args[0];
 			Registry registry = LocateRegistry.getRegistry(host);

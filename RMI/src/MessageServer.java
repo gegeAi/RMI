@@ -1,6 +1,6 @@
 import java.rmi.server.*;
 import java.rmi.registry.*; 
-
+import java.awt.*;
 public class MessageServer {
 
 	public static void main(String[] args) {
