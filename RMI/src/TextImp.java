@@ -1,6 +1,6 @@
 import java.rmi.RemoteException;
 import java.io.*;
-
+import java.util.ArrayList;
 
 public class TextImp implements Text {
 	
@@ -8,9 +8,11 @@ public class TextImp implements Text {
 	private String lastText = "";
 	private String[] historique;
 	private static int SIZE = 10;
+	private static ArrayList ListeClients;
 	
 	TextImp()
 	{
+		ListeClients = new ArrayList();
 		try {
 			
 			ObjectInputStream ois = new ObjectInputStream(
@@ -28,6 +30,19 @@ public class TextImp implements Text {
 				historique[i] = "";
 			}
 		}
+	}
+	
+	@Override
+	public boolean userExist(String name) throws RemoteException {
+		
+		return ListeClients.contains(name);
+
+	}
+	
+	@Override
+	public void ajoutUser(String name) throws RemoteException
+	{
+		ListeClients.add(name);
 	}
 
 	@Override

@@ -37,13 +37,19 @@ public class MessageClient {
 		{
 			//if (System.getSecurityManager() == null) { System.setSecurityManager(new SecurityManager()); }
 			
-			System.out.println("Rentrez votre nom d'utilisateur :");
-			String name = "["+ sc.nextLine().trim() + "]";
 			
 			String host = args[0];
 			Registry registry = LocateRegistry.getRegistry(host);
 			Text texte = (Text) registry.lookup("text");
 			
+			System.out.println("Rentrez votre nom d'utilisateur :");
+			String name = "["+ sc.nextLine().trim() + "]";
+			while(texte.userExist(name))
+			{
+				System.out.println("Nom deja pris, choisissez un autre :");
+				name = "["+ sc.nextLine().trim() + "]";
+			}
+			texte.ajoutUser(name);
 			System.out.println("Client ready");
 			
 			String[] histo = texte.getHistorique();
