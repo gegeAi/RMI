@@ -1,4 +1,5 @@
 import java.rmi.RemoteException;
+import java.util.Vector;
 import java.io.*;
 
 
@@ -8,11 +9,12 @@ public class TextImp implements Text {
 	private String lastText = "";
 	private String[] historique;
 	private static int SIZE = 10;
+	private Vector<ClientInt> clients;
 	
 	TextImp()
 	{
 		try {
-			
+			clients = new Vector<ClientInt>();
 			ObjectInputStream ois = new ObjectInputStream(
 										new FileInputStream(
 											new File("historique.log")));
@@ -31,16 +33,15 @@ public class TextImp implements Text {
 	}
 
 	@Override
-	public String get() throws RemoteException {
-
-		return lastText;
-	}
-
-	@Override
 	public void send(String message) throws RemoteException {
 		
 		lastText = message;
 		editHistorique();
+		String s = get();
+		for(int i=0; i<clients.size(); i++)
+		{
+			clients.get(i).ecrit(s);
+		}
 
 	}
 	
@@ -75,6 +76,40 @@ public class TextImp implements Text {
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public void connect(ClientInt client) throws RemoteException 
+	{
+		clients.add(client);
+		
+	}
+
+	@Override
+	public String get() throws RemoteException {
+		String s = "";
+		for(int i=0; i<historique.length; i++)
+		{
+			s += historique[i];
+		}
+		return s;
+	}
+
+	@Override
+	public boolean isUsernameUsed(String s, ClientInt client) throws RemoteException {
+		for(int i=0; i<clients.size(); i++)
+		{
+			if(clients.get(i) != client && clients.get(i).cmp(s))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void delete(ClientInt client) throws RemoteException {
+		clients.remove(client);
 	}
 
 }

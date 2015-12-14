@@ -6,7 +6,7 @@ public class MessageServer {
 	public static void main(String[] args) {
 		try 
 		{
-			//if (System.getSecurityManager() == null) { System.setSecurityManager(new SecurityManager());} 
+			 //if (System.getSecurityManager() == null) { System.setSecurityManager(new SecurityManager());} 
 			// Create a Hello remote object
 			LocateRegistry.createRegistry(1099);
 			TextImp text = new TextImp ();
