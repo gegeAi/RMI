@@ -1,12 +1,10 @@
 import java.rmi.server.*;
 import java.rmi.registry.*; 
-import java.awt.*;
 public class MessageServer {
 
 	public static void main(String[] args) {
 		try 
 		{
-			 //if (System.getSecurityManager() == null) { System.setSecurityManager(new SecurityManager());} 
 			// Create a Hello remote object
 			LocateRegistry.createRegistry(1099);
 			TextImp text = new TextImp ();

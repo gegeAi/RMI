@@ -1,23 +1,34 @@
 import java.rmi.RemoteException;
 import java.util.Vector;
 import java.io.*;
-import java.util.ArrayList;
 
 public class TextImp implements Text {
 	
-	
+	/**
+	 * dernier message recu par le serveur
+	 */
 	private String lastText = "";
-	private String[] historique;
-	private static int SIZE = 10;
-<<<<<<< HEAD
-	private Vector<ClientInt> clients;
-=======
-	private static ArrayList ListeClients;
->>>>>>> ee901fbc1945cbf08b1d1b8856973d1a5e6e4a1e
 	
+	/**
+	 * historique fini de messagerie
+	 */
+	private String[] historique;
+	
+	/**
+	 * la taille de l'historique
+	 */
+	private static int SIZE = 100;
+	
+	/**
+	 * l'ensemble des clients connectes
+	 */
+	private Vector<ClientInt> clients;
+	
+	/**
+	 * Construit l'objet remote qui servira de serveur
+	 */
 	TextImp()
 	{
-		ListeClients = new ArrayList();
 		try {
 			clients = new Vector<ClientInt>();
 			ObjectInputStream ois = new ObjectInputStream(
@@ -38,19 +49,6 @@ public class TextImp implements Text {
 	}
 	
 	@Override
-	public boolean userExist(String name) throws RemoteException {
-		
-		return ListeClients.contains(name);
-
-	}
-	
-	@Override
-	public void ajoutUser(String name) throws RemoteException
-	{
-		ListeClients.add(name);
-	}
-
-	@Override
 	public void send(String message) throws RemoteException {
 		
 		lastText = message;
@@ -58,19 +56,22 @@ public class TextImp implements Text {
 		String s = get();
 		for(int i=0; i<clients.size(); i++)
 		{
-			clients.get(i).ecrit(s);
+			if(!lastText.contains("[") && lastText.contains(clients.get(i).getUsername()))
+			{
+				clients.get(i).ecrit(s);
+			}
+			else
+			{
+			clients.get(i).ecrit(lastText);
+			}
 		}
+		
 
 	}
 	
-
-
-	@Override
-	public String[] getHistorique() throws RemoteException {
-		// TODO Auto-generated method stub
-		return historique;
-	}
-	
+	/**
+	 * met l'historique a jour et l'enregistre dans un fichier
+	 */
 	private void editHistorique() 
 	{
 		for(int i=0; i<historique.length-1; i++)
@@ -90,7 +91,6 @@ public class TextImp implements Text {
 			oos.close();
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -99,12 +99,16 @@ public class TextImp implements Text {
 	@Override
 	public void connect(ClientInt client) throws RemoteException 
 	{
-		clients.add(client);
-		
+		clients.add(client);		
 	}
 
-	@Override
-	public String get() throws RemoteException {
+	/**
+	 * Transforme le tableau de String en une seule par concatenation
+	 * @return historique
+	 * 		le tableau de message historique transforme en String
+	 
+	 */
+	public String get()  {
 		String s = "";
 		for(int i=0; i<historique.length; i++)
 		{
@@ -112,22 +116,30 @@ public class TextImp implements Text {
 		}
 		return s;
 	}
-
+	
 	@Override
-	public boolean isUsernameUsed(String s, ClientInt client) throws RemoteException {
+	public boolean isUsernameUsed(String userName, ClientInt client) throws RemoteException {
 		for(int i=0; i<clients.size(); i++)
 		{
-			if(clients.get(i) != client && clients.get(i).cmp(s))
+			if(clients.get(i) != client && clients.get(i).cmp(userName))
 			{
 				return true;
 			}
+			
 		}
 		return false;
 	}
 
 	@Override
-	public void delete(ClientInt client) throws RemoteException {
-		clients.remove(client);
+	public void delete(String name) throws RemoteException {
+		for(int i=0; i<clients.size(); i++)
+		{
+			if(clients.get(i).cmp(name))
+			{
+				clients.remove(i);
+				break;
+			}
+		}
 	}
 
 }
